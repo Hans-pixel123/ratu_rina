@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Untuk Kamu...</title>
+  <!-- Mengambil font romantis dari Google -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: linear-gradient(135deg, #1a0b12, #4a1525);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Layar Pembuka (Tombol Mulai) */
+    #start-screen {
+      z-index: 10;
+      transition: opacity 1s ease;
+    }
+    #start-screen h2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.5rem;
+      color: #ff9fb2;
+      margin-bottom: 20px;
+    }
+    .open-btn {
+      background: #ff4d6d;
+      color: white;
+      border: none;
+      padding: 15px 35px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(255, 77, 109, 0.4);
+      transition: all 0.3s ease;
+    }
+    .open-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      background: #ff3355;
+    }
+
+    /* Layar Utama Romantis (Awalnya Tersembunyi) */
+    #main-content {
+      display: none;
+      z-index: 5;
+      padding: 20px;
+      max-width: 600px;
+      animation: fadeIn 2s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .photo-frame {
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 25px auto;
+      border-radius: 50%;
+      padding: 5px;
+      background: linear-gradient(45deg, #ff4d6d, #ff9fb2);
+      box-shadow: 0 15px 35px rgba(255, 77, 109, 0.5);
+    }
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #1a0b12;
+    }
+
+    h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3rem;
+      color: #ff9fb2;
+      margin-bottom: 15px;
+    }
+    p.message {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #ffd6df;
+      font-weight: 300;
+      margin-bottom: 20px;
+    }
+
+    /* Animasi Hati Jatuh */
+    .heart {
+      position: absolute;
+      top: -10vh;
+      font-size: 1.5rem;
+      color: #ff4d6d;
+      animation: fall linear infinite;
+      z-index: 1;
+      opacity: 0.7;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Layar Pembuka -->
+  <div id="start-screen">
+    <h2>Ada pesan khusus buat kamu...</h2>
+    <button class="open-btn" id="open-btn">Buka Pesan 💌</button>
+  </div>
+
+  <!-- Layar Utama Romantis -->
+  <div id="main-content">
+    <div class="photo-frame">
+      <!-- Menggunakan foto Rina yang sudah disiapkan -->
+      <img src="foto-rina.jpg" alt="Foto Ratu Rina" />
+    </div>
+    
+    <h1>Untuk Ratu Rina yang Cantik 💖</h1>
+    
+    <p class="message" id="typing-text"></p>
+  </div>
+
+  <!-- Audio Background -->
+  <audio id="bg-music" src="lagu-romantis.mp3" loop></audio>
+
+  <script>
+    const startScreen = document.getElementById('start-screen');
+    const mainContent = document.getElementById('main-content');
+    const openBtn = document.getElementById('open-btn');
+    const bgMusic = document.getElementById('bg-music');
+    const typingText = document.getElementById('typing-text');
+
+    // Pesan romantis yang akan diketik perlahan
+    const pesan = "Terima kasih sudah selalu ada dan menjadi bagian terindah dalam hidupku. Senyum kamu itu hal favoritku setiap hari. I love you! 💕";
+    let indexPesan = 0;
+
+    // Efek mengetik perlahan
+    function typeWriter() {
+      if (indexPesan < pesan.length) {
+        typingText.innerHTML += pesan.charAt(indexPesan);
+        indexPesan++;
+        setTimeout(typeWriter, 50); // Kecepatan ketik (milidetik)
+      }
+    }
+
+    // Fungsi membuat hati berjatuhan
+    function createHearts() {
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerText = '💖';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+        heart.style.fontSize = Math.random() * 1 + 1 + 'rem';
+        document.body.appendChild(heart);
+
+        // Hapus hati yang sudah jatuh agar web tidak berat
+        setTimeout(() => {
+          heart.remove();
+        }, 7000);
+      }, 400); // Munculkan hati setiap 0.4 detik
+    }
+
+    openBtn.addEventListener('click', () => {
+      // Putar musik
+      bgMusic.play();
+      
+      // Sembunyikan tombol mulai
+      startScreen.style.opacity = '0';
+      setTimeout(() => {
+        startScreen.style.display = 'none';
+        
+        // Tampilkan halaman utama dan jalankan animasi
+        mainContent.style.display = 'block';
+        createHearts();
+        
+        // Mulai ketik pesan setelah jeda sedikit
+        setTimeout(typeWriter, 800);
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
